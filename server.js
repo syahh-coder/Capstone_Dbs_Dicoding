@@ -22,21 +22,8 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ==================== MULTER CONFIG ====================
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, uploadsDir),
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    }
-});
-
 const upload = multer({
-    storage,
+    storage: multer.memoryStorage(),
     limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB max
     fileFilter: (req, file, cb) => {
         // Accept any audio MIME type
@@ -76,12 +63,10 @@ app.post('/api/predict', upload.single('file'), async (req, res) => {
         });
     }
 
-    const filePath = req.file.path;
-
     try {
         // Build FormData to forward to HuggingFace
         const formData = new FormData();
-        formData.append('file', fs.createReadStream(filePath), {
+        formData.append('file', req.file.buffer, {
             filename: req.file.originalname || 'audio.wav',
             contentType: req.file.mimetype
         });
@@ -96,9 +81,6 @@ app.post('/api/predict', upload.single('file'), async (req, res) => {
             maxBodyLength: Infinity
         });
 
-        // Clean up temp file
-        fs.unlink(filePath, () => {});
-
         // Return prediction result
         res.json({
             success: true,
@@ -106,9 +88,6 @@ app.post('/api/predict', upload.single('file'), async (req, res) => {
         });
 
     } catch (error) {
-        // Clean up temp file on error
-        fs.unlink(filePath, () => {});
-
         if (error.response) {
             // HuggingFace returned an error
             const status = error.response.status;
@@ -153,8 +132,12 @@ app.get('*', (req, res) => {
 });
 
 // ==================== START SERVER ====================
-app.listen(PORT, () => {
-    console.log(`\n🎵 Audio Deepfake Detector`);
-    console.log(`   Server running on http://localhost:${PORT}`);
-    console.log(`   HuggingFace API: ${HF_API_URL}\n`);
-});
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`\n🎵 Audio Deepfake Detector`);
+        console.log(`   Server running on http://localhost:${PORT}`);
+        console.log(`   HuggingFace API: ${HF_API_URL}\n`);
+    });
+}
+
+module.exports = app;
