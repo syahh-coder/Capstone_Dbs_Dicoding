@@ -1,0 +1,8 @@
+fastapi
+python-multipart
+uvicorn
+torch
+torchaudio
+soundfile
+numpy
+torchcodec

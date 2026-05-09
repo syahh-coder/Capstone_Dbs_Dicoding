@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Deepfake Detector — Deteksi Audio Palsu dengan AI</title>
+    <meta name="description" content="Deteksi audio deepfake secara instan menggunakan AI Hybrid CNN. Upload file audio atau rekam suara langsung dari browser.">
+    <meta name="keywords" content="deepfake, audio detector, AI, machine learning, audio forensik">
+    <meta property="og:title" content="Audio Deepfake Detector">
+    <meta property="og:description" content="Deteksi audio deepfake secara instan menggunakan AI Hybrid CNN.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- ===== BACKGROUND EFFECTS ===== -->
+    <div class="bg-effects">
+        <div class="bg-orb bg-orb--1"></div>
+        <div class="bg-orb bg-orb--2"></div>
+        <div class="bg-orb bg-orb--3"></div>
+    </div>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar__container">
+            <a href="/" class="navbar__brand">
+                <span class="navbar__icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 18V5l12-2v13"/>
+                        <circle cx="6" cy="18" r="3"/>
+                        <circle cx="18" cy="16" r="3"/>
+                    </svg>
+                </span>
+                <span class="navbar__title">AudioGuard<span class="navbar__title-ai">AI</span></span>
+            </a>
+            <div class="navbar__actions">
+                <div class="api-status" id="api-status" title="Status koneksi backend">
+                    <span class="api-status__dot"></span>
+                    <span class="api-status__text">Memeriksa...</span>
+                </div>
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode">
+                    <svg class="theme-toggle__icon theme-toggle__icon--dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    <svg class="theme-toggle__icon theme-toggle__icon--light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <header class="hero" id="hero">
+        <div class="hero__container">
+            <div class="hero__badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Powered by Hybrid CNN Model
+            </div>
+            <h1 class="hero__title">
+                Deteksi <span class="hero__title--gradient">Audio Deepfake</span><br>dengan Kecerdasan Buatan
+            </h1>
+            <p class="hero__subtitle">
+                Upload file audio atau rekam suara langsung — AI kami akan menganalisis keaslian audio dalam hitungan detik.
+            </p>
+            <a href="#detector" class="hero__cta">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Mulai Deteksi
+            </a>
+        </div>
+    </header>
+
+    <!-- ===== MAIN DETECTOR ===== -->
+    <main class="detector" id="detector">
+        <div class="detector__container">
+
+            <!-- Tab Switcher -->
+            <div class="tabs" id="tabs">
+                <button class="tabs__btn tabs__btn--active" data-tab="upload" id="tab-upload">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Upload File
+                </button>
+                <button class="tabs__btn" data-tab="record" id="tab-record">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                    Rekam Suara
+                </button>
+                <div class="tabs__indicator" id="tabs-indicator"></div>
+            </div>
+
+            <!-- Upload Panel -->
+            <div class="panel panel--active" id="panel-upload">
+                <div class="dropzone" id="dropzone">
+                    <div class="dropzone__content">
+                        <div class="dropzone__icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        </div>
+                        <p class="dropzone__title">Drag & drop file audio di sini</p>
+                        <p class="dropzone__or">atau</p>
+                        <button class="dropzone__browse" id="browse-btn">Pilih File</button>
+                        <p class="dropzone__formats">MP3, WAV, OGG, FLAC, M4A, AAC, WebM — Maks. 10 MB</p>
+                    </div>
+                    <input type="file" id="file-input" accept="audio/*" hidden>
+                </div>
+
+                <!-- File Info (shown after file selected) -->
+                <div class="file-info" id="file-info" style="display:none;">
+                    <div class="file-info__details">
+                        <div class="file-info__icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                        </div>
+                        <div class="file-info__text">
+                            <p class="file-info__name" id="file-name">—</p>
+                            <p class="file-info__meta" id="file-meta">—</p>
+                        </div>
+                        <button class="file-info__remove" id="remove-file" title="Hapus file">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                    <div class="audio-preview" id="audio-preview-upload">
+                        <audio id="audio-player-upload" controls></audio>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Record Panel -->
+            <div class="panel" id="panel-record">
+                <!-- Waveform Visualizer -->
+                <div class="recorder">
+                    <canvas class="recorder__canvas" id="waveform-canvas" width="600" height="120"></canvas>
+
+                    <div class="recorder__timer" id="record-timer">00:00</div>
+
+                    <div class="recorder__controls">
+                        <button class="recorder__btn recorder__btn--record" id="record-btn" title="Mulai rekam">
+                            <span class="recorder__btn-inner">
+                                <svg class="recorder__btn-icon recorder__btn-icon--mic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                                <svg class="recorder__btn-icon recorder__btn-icon--stop" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+                            </span>
+                        </button>
+                    </div>
+
+                    <p class="recorder__hint" id="record-hint">Klik tombol untuk mulai merekam</p>
+
+                    <!-- Mic permission error -->
+                    <div class="recorder__error" id="mic-error" style="display:none;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                        <span id="mic-error-text">Akses mikrofon ditolak</span>
+                    </div>
+                </div>
+
+                <!-- Recording preview (shown after recording done) -->
+                <div class="file-info" id="record-info" style="display:none;">
+                    <div class="file-info__details">
+                        <div class="file-info__icon file-info__icon--record">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+                        </div>
+                        <div class="file-info__text">
+                            <p class="file-info__name">Rekaman Suara</p>
+                            <p class="file-info__meta" id="record-meta">—</p>
+                        </div>
+                        <button class="file-info__remove" id="discard-recording" title="Hapus rekaman">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                    <div class="audio-preview">
+                        <audio id="audio-player-record" controls></audio>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analyze Button -->
+            <button class="analyze-btn" id="analyze-btn" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <span>Analisis Sekarang</span>
+            </button>
+
+            <!-- Loading State -->
+            <div class="loading" id="loading" style="display:none;">
+                <div class="loading__spinner">
+                    <div class="loading__ring"></div>
+                    <div class="loading__ring"></div>
+                    <div class="loading__ring"></div>
+                </div>
+                <p class="loading__text" id="loading-text">Menganalisis audio...</p>
+                <p class="loading__sub">Model AI sedang memproses file Anda</p>
+            </div>
+
+            <!-- Error State -->
+            <div class="error-state" id="error-state" style="display:none;">
+                <div class="error-state__icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <p class="error-state__title" id="error-title">Terjadi Kesalahan</p>
+                <p class="error-state__message" id="error-message">—</p>
+                <button class="error-state__retry" id="error-retry">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                    Coba Lagi
+                </button>
+            </div>
+
+            <!-- Result -->
+            <div class="result" id="result" style="display:none;">
+                <div class="result__header">
+                    <div class="result__icon" id="result-icon">
+                        <!-- Filled by JS -->
+                    </div>
+                    <div class="result__label-wrap">
+                        <span class="result__label" id="result-label">REAL</span>
+                        <span class="result__confidence" id="result-confidence">92%</span>
+                    </div>
+                </div>
+
+                <div class="result__filename" id="result-filename">sample.wav</div>
+
+                <div class="result__explanation" id="result-explanation">
+                    <!-- Filled by JS -->
+                </div>
+
+                <div class="result__bars">
+                    <div class="result__bar-group">
+                        <div class="result__bar-label">
+                            <span>Real (Asli)</span>
+                            <span class="result__bar-value" id="result-real-pct">92%</span>
+                        </div>
+                        <div class="result__bar-track">
+                            <div class="result__bar-fill result__bar-fill--real" id="result-real-bar" style="width:0%"></div>
+                        </div>
+                    </div>
+                    <div class="result__bar-group">
+                        <div class="result__bar-label">
+                            <span>Fake (Palsu)</span>
+                            <span class="result__bar-value" id="result-fake-pct">8%</span>
+                        </div>
+                        <div class="result__bar-track">
+                            <div class="result__bar-fill result__bar-fill--fake" id="result-fake-bar" style="width:0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="result__again" id="result-again">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                    Analisis Audio Lain
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="how-it-works__container">
+            <h2 class="section-title">Bagaimana Cara Kerjanya?</h2>
+            <p class="section-subtitle">Tiga langkah sederhana untuk mendeteksi keaslian audio</p>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step__number">1</div>
+                    <div class="step__icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </div>
+                    <h3 class="step__title">Upload atau Rekam</h3>
+                    <p class="step__desc">Upload file audio (MP3, WAV, dll.) atau rekam suara langsung dari mikrofon browser Anda.</p>
+                </div>
+                <div class="step">
+                    <div class="step__number">2</div>
+                    <div class="step__icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    </div>
+                    <h3 class="step__title">Analisis AI</h3>
+                    <p class="step__desc">Model Hybrid CNN menganalisis waveform dan MFCC audio untuk mendeteksi pola deepfake.</p>
+                </div>
+                <div class="step">
+                    <div class="step__number">3</div>
+                    <div class="step__icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <h3 class="step__title">Lihat Hasil</h3>
+                    <p class="step__desc">Dapatkan hasil instan: apakah audio tersebut Real (asli) atau Fake (deepfake) beserta tingkat kepercayaan.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TECH SECTION ===== -->
+    <section class="tech-section" id="tech">
+        <div class="tech-section__container">
+            <h2 class="section-title">Teknologi di Balik Deteksi</h2>
+            <p class="section-subtitle">Model AI yang menggabungkan dua pendekatan analisis audio</p>
+            <div class="tech-cards">
+                <div class="tech-card">
+                    <div class="tech-card__icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    </div>
+                    <h3 class="tech-card__title">1D CNN — Waveform</h3>
+                    <p class="tech-card__desc">Menganalisis pola gelombang mentah (raw waveform) audio untuk mendeteksi artefak yang tidak terdengar oleh telinga manusia.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-card__icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    </div>
+                    <h3 class="tech-card__title">2D CNN — MFCC</h3>
+                    <p class="tech-card__desc">Mengekstrak fitur frekuensi (Mel-Frequency Cepstral Coefficients) untuk mengenali karakteristik suara sintetis.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-card__icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                    </div>
+                    <h3 class="tech-card__title">Hybrid Fusion</h3>
+                    <p class="tech-card__desc">Menggabungkan kedua fitur untuk klasifikasi akhir yang lebih akurat dibandingkan metode tunggal.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="footer__container">
+            <div class="footer__brand">
+                <span class="footer__logo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                </span>
+                AudioGuard<span class="footer__ai">AI</span>
+            </div>
+            <p class="footer__text">Audio Deepfake Detector — Powered by Hybrid CNN Model on HuggingFace Spaces</p>
+            <div class="footer__links">
+                <a href="https://syahhh01-audio-capst-detector.hf.space/docs" target="_blank" rel="noopener">API Docs</a>
+                <a href="https://huggingface.co/spaces/syahhh01/audio-capst-detector" target="_blank" rel="noopener">HuggingFace</a>
+            </div>
+            <p class="footer__copy">&copy; 2026 AudioGuardAI. Built for Capstone Project.</p>
+        </div>
+    </footer>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/js/api.js"></script>
+    <script src="/js/visualizer.js"></script>
+    <script src="/js/upload.js"></script>
+    <script src="/js/recorder.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>
