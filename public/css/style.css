@@ -283,7 +283,8 @@ audio::-webkit-media-controls-panel { background: var(--bg-secondary); }
 .result--real .result__label { color: var(--success); }
 .result--fake .result__label { color: var(--danger); }
 .result__confidence { display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); }
-.result__filename { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 16px; }
+.result__filename { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 4px; }
+.result__chunks { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 16px; opacity: 0.75; }
 .result__explanation {
   padding: 12px 16px; border-radius: var(--radius-xs);
   font-size: 0.85rem; line-height: 1.6; margin-bottom: 24px;

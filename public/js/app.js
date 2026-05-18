@@ -138,6 +138,15 @@ const App = {
         // Filename
         document.getElementById('result-filename').textContent = `File: ${data.filename || filename}`;
 
+        // Chunks processed
+        const chunksEl = document.getElementById('result-chunks');
+        if (data.total_chunks_processed != null) {
+            chunksEl.textContent = `${data.total_chunks_processed} segmen audio dianalisis`;
+            chunksEl.style.display = 'block';
+        } else {
+            chunksEl.style.display = 'none';
+        }
+
         // Explanation
         document.getElementById('result-explanation').textContent = isReal
             ? `Audio ini terdeteksi sebagai suara ASLI dengan tingkat kepercayaan ${confidence}%. Model tidak menemukan pola artefak deepfake yang signifikan.`
